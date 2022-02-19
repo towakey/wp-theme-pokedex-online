@@ -1,0 +1,100 @@
+<html lang="ja">
+    <head>
+        <title>Pokedex Online</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <!-- Google icon font -->
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+        <!-- Materialize CSS -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+        <style>
+        </style>
+    </head>
+    <body>
+        <header>
+            <nav class="grey lighten-1">
+                <div class="nav-wrapper">
+                    <a href="#" class="center brand-logo">Pokedex Online</a>
+                    <ul id="nav-mobile" class="right hide-on-med-and-down">
+                        <li>
+                            <!-- <a href="#">test1</a> -->
+                        </li>
+                    </ul>
+                    <a href="#" data-target="slide-out" class="sidenav-trigger"><i class="material-icons">menu</i></a>
+                </div>
+            </nav>
+            <ul id="slide-out" class="sidenav sidenav-fixed hide-on-large-only">
+                <li><a href="#">First</a></li>
+                <li><a href="#">Second</a></li>
+            </ul>
+        </header>
+        <div class="row">
+            <a href="#" class="col s12 m12 l6">
+                <div class="card">
+                    <div class="card-title">カントー地方</div>
+                    <div class="card-content">ポケットモンスター赤・緑・青・ピカチュウ</div>
+                </div>
+            </a>
+            <a href="#" class="col s12 m12 l6">
+                <div class="card">
+                    <div class="card-title">ジョウト地方</div>
+                    <div class="card-content">ポケットモンスター金・銀・クリスタル</div>
+                </div>
+            </a>
+        </div>
+        <div class="row">
+            <a href="#" class="col s12 m12 l6">
+                <div class="card">
+                    <div class="card-title">ホウエン地方</div>
+                    <div class="card-content">ポケットモンスタールビー・サファイア・エメラルド</div>
+                </div>
+            </a>
+            <a href="#" class="col s12 m12 l6">
+                <div class="card">
+                    <div class="card-title">シンオウ地方</div>
+                    <div class="card-content">ポケットモンスターダイヤモンド・パール・プラチナ</div>
+                </div>
+            </a>
+        </div>
+        <div class="row">
+            <a href="#" class="col s12 m12 l6">
+                <div class="card">
+                    <div class="card-title">イッシュ地方</div>
+                    <div class="card-content">ポケットモンスターブラック・ホワイト・ブラック2・ホワイト2</div>
+                </div>
+            </a>
+            <a href="#" class="col s12 m12 l6">
+                <div class="card">
+                    <div class="card-title">カロス地方</div>
+                    <div class="card-content">ポケットモンスターX・Y</div>
+                </div>
+            </a>
+        </div>
+        <div class="row">
+            <a href="#" class="col s12 m12 l6">
+                <div class="card">
+                    <div class="card-title">アローラ地方</div>
+                    <div class="card-content">ポケットモンスターサン・ムーン・ウルトラサン・ウルトラムーン</div>
+                </div>
+            </a>
+            <a href="#" class="col s12 m12 l6">
+                <div class="card">
+                    <div class="card-title">ガラル地方</div>
+                    <div class="card-content">ポケットモンスターソード・シールド・エキスパンションパック</div>
+                </div>
+            </a>
+        </div>
+        <footer class="page-footer grey lighten-1">
+            <div class="footer-copyright">
+                <div class="container">© Copyright Pokedex Online</div>
+            </div>
+        </footer>
+        <!-- Materialize JavaScript -->
+        <script>
+            document.addEventListener('DOMContentLoaded', function(){
+                var elements=document.querySelectorAll('.sidenav');
+                var instances=M.Sidenav.init(elements, {});
+            });
+        </script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    </body>
+</html>
