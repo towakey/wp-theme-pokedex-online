@@ -14,6 +14,18 @@ function create_pokedex_pages(){
     $description_file=mb_convert_encoding($description_file, 'UTF8', 'ASCII,JIS,UTF-8,EUC-JP,SJIS-WIN');
     $description_json=json_decode($description_file, true);
 
+    $version_conversion=array(
+        'red'=>'赤','green'=>'緑','blue'=>'青','pikachu'=>'ピカチュウ',
+        'gold'=>'金','silver'=>'銀','crystal'=>'クリスタル',
+        'ruby'=>'ルビー','sapphire'=>'サファイア','firered'=>'ファイアレッド','leafgreen'=>'リーフグリーン','emerald'=>'エメラルド',
+        'diamond'=>'ダイアモンド','pearl'=>'パール','platinum'=>'プラチナ',
+        'black'=>'ブラック','white'=>'ホワイト','black2'=>'ブラック2','white2'=>'ホワイト2','heartgold'=>'ハートゴールド','soulsilver'=>'ソウルシルバー',
+        'x'=>'X','x_kanji'=>'X(漢字)','y'=>'Y','y_kanji'=>'Y(漢字)','omegaruby'=>'オメガルビー','omegaruby_kanji'=>'オメガルビー(漢字)','alphasapphire'=>'アルファサファイア','alphasapphire_kanji'=>'アルファサファイア(漢字)',
+        'sun'=>'サン','sun_kanji'=>'サン(漢字)','moon'=>'ムーン','moon_kanji'=>'ムーン(漢字)','ultrasun'=>'ウルトラサン','ultrasun_kanji'=>'ウルトラサン(漢字)','ultramoon'=>'ウルトラムーン','ultramoon_kanji'=>'ウルトラムーン(漢字)',
+        'letsgopikachu'=>"Let's go ピカチュウ",'letsgopikachu_kanji'=>"Let's go ピカチュウ(漢字)",'letsgoeevee'=>"Let's go イーブイ",'letsgoeevee_kanji'=>"Let's go イーブイ(漢字)",'sword'=>'ソード','sword_kanji'=>'ソード(漢字)','shield'=>'シールド','shield_kanji'=>'シールド(漢字)',
+        'pokemongo'=>'PokemonGO','pokemonstadium'=>'ポケモンスタジアム','pokemonpinball'=>'ポケモンピンボール','pokemonranger'=>'ポケモンレンジャー	'
+    );
+
     // $description_version_name=[
     //     ""
     // ]
@@ -118,9 +130,10 @@ EOF;
     {
 
     // $description_contents=;
+    $version=$version_conversion[$key];
 $contents=$contents.<<<EOF
 <tr>
-    <th>$key</th>
+    <th>$version</th>
     <td>$value</td>
 </tr>
 EOF;
