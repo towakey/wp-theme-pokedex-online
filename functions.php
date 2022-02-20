@@ -10,14 +10,138 @@ function create_pokedex_pages(){
     $pokedex_file=file_get_contents(get_template_directory().$url.'/pokedex/pokedex.json');
     $pokedex_file=mb_convert_encoding($pokedex_file, 'UTF8', 'ASCII,JIS,UTF-8,EUC-JP,SJIS-WIN');
     $pokedex_json=json_decode($pokedex_file, true);
+    $description_file=file_get_contents(get_template_directory().$url.'/pokedex/description.json');
+    $description_file=mb_convert_encoding($description_file, 'UTF8', 'ASCII,JIS,UTF-8,EUC-JP,SJIS-WIN');
+    $description_json=json_decode($description_file, true);
 
-    for($i=0;$i<3;$i++){
-        $pages_array=array('title'=>$pokedex_json['pokedex'][$i]['name']['jpn'], 'name'=>$pokedex_json['pokedex'][$i]['name']['jpn'], 'parent'=>'pokedex');
+    // $description_version_name=[
+    //     ""
+    // ]
+
+    for($i=0;$i<count($pokedex_json['pokedex']);$i++){
+        $pokedex_id=$pokedex_json['pokedex'][$i]['id'];
+        $pokedex_name=$pokedex_json['pokedex'][$i]['name']['jpn'];
+        $pokedex_class=$pokedex_json['pokedex'][$i]['classification'];
+        $pokedex_height=$pokedex_json['pokedex'][$i]['height'];
+        $pokedex_weight=$pokedex_json['pokedex'][$i]['weight'];
+
+        if($i==0){
+            $pokedex_name_prev=null;
+        }else{
+            $pokedex_name_prev=$pokedex_json['pokedex'][$i-1]['name']['jpn'];
+        }
+        if($i>count($pokedex_json['pokedex'])){
+            $pokedex_name_next=null;
+        }else{
+            $pokedex_name_next=$pokedex_json['pokedex'][$i+1]['name']['jpn'];
+        }
+        $link_uri=home_url( '/' )."pokedex/";
+
+
+$contents=<<<EOF
+<div class="row">
+<div class="col s12 m12 l12">
+    <div class="card z-depth-0">
+EOF;
+if($pokedex_name_prev===null){
+$contents=$contents.<<<EOF
+<a href="$link_uri$pokedex_name_next" class="waves-effect waves-light btn right grey lighten-1 z-depth-0">$pokedex_name_next</a>
+EOF;
+}elseif($pokedex_name_next===null){
+$contents=$contents.<<<EOF
+<a href="$link_uri$pokedex_name_prev" class="waves-effect waves-light btn left grey lighten-1 z-depth-0">$pokedex_name_prev</a>
+EOF;
+}else{
+$contents=$contents.<<<EOF
+<a href="$link_uri$pokedex_name_prev" class="waves-effect waves-light btn left grey lighten-1 z-depth-0">$pokedex_name_prev</a><a href="$link_uri$pokedex_name_next" class="waves-effect waves-light btn right grey lighten-1 z-depth-0">$pokedex_name_next</a>
+EOF;
+}
+$contents=$contents.<<<EOF
+    </div>
+</div>
+</div>
+
+<div class="row">
+<div class="col s12 m6 l6">
+    <div class="card z-depth-0 grey lighten-3">
+        <div class="card-content">
+            <span class="card-title center-align">$pokedex_name</span>
+            <span class="">No Image</span>
+        </div>
+    </div>
+</div>
+<div class=" col s12 m6 l6">
+    <div class="card z-depth-0 grey lighten-3">
+        <div class="card-content">
+            <table>
+                <thead>
+                    <tr>
+                        <th>全国図鑑No</th>
+                        <td>$pokedex_id</td>
+                    </tr>
+                    <tr>
+                        <th>分類</th>
+                        <td>$pokedex_class</td>
+                    </tr>
+                    <tr>
+                        <th>高さ</th>
+                        <td>$pokedex_height</td>
+                    </tr>
+                    <tr>
+                        <th>重さ</th>
+                        <td>$pokedex_weight</td>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+</div>
+</div>
+<div class="row">
+<div class="col s12 m12 l12">
+    <ul class="collapsible grey lighten-3">
+    <li>
+    <div class="collapsible-header z-depth-0 grey lighten-1">図鑑説明</div>
+    <div class="collapsible-body">
+    <table class=" grey lighten-3">
+        <thead>
+            <tr>
+                <th style="width: 20%;">バージョン</th>
+                <th style="width: 80%;">図鑑説明</th>
+            </tr>
+        </thead>
+        <tbody>
+EOF;
+// for($j=0;$j<57;$j++)
+// {
+    foreach($description_json["description"][$i]["ja"] as $key=>$value)
+    {
+
+    // $description_contents=;
+$contents=$contents.<<<EOF
+<tr>
+    <th>$key</th>
+    <td>$value</td>
+</tr>
+EOF;
+    }
+// }
+$contents=$contents.<<<EOF
+        </tbody>
+    </table>
+    </li>
+    </ul>
+</div>
+</div>
+
+EOF;
+        $pages_array=array('title'=>$pokedex_json['pokedex'][$i]['name']['jpn'], 'name'=>$pokedex_json['pokedex'][$i]['name']['jpn'], 'contents'=>$contents, 'parent'=>'pokedex');
         setting_pages($pages_array);
     }
 }
 
 function setting_pages($val){
+    $template="page-pokedex.php";
     if(!empty($val['parent'])){
         $parent_id=get_page_by_path($val['parent']);
         $parent_id=$parent_id->ID;
@@ -36,7 +160,8 @@ function setting_pages($val){
                 'post_status'   =>'publish',
                 'post_type'     =>'page',
                 'post_parent'   =>$parent_id,
-                'post_content'  =>'',
+                'post_content'  =>$val['contents'],
+                'page_template' =>$template,
             )
         );
     }else{
@@ -47,6 +172,8 @@ function setting_pages($val){
             'ID'        =>$page_id,
             'post_title'=>$val['title'],
             'post_name' =>$page_name,
+            'post_content'  =>$val['contents'],
+            'page_template' =>$template,
         );
         wp_update_post($base_post);
     }

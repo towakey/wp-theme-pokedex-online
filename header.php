@@ -12,7 +12,7 @@
     </head>
     <body>
         <header>
-            <nav>
+            <nav class="grey lighten-1">
                 <div class="nav-wrapper">
                     <a href="<?php echo get_home_url();?>" class="center brand-logo"><?php echo get_bloginfo('name');?></a>
                     <ul id="nav-mobile" class="right hide-on-med-and-down">
