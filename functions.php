@@ -1,5 +1,88 @@
 <?php
 
+function create_init_pages(){
+    $pages_array=array('title'=>'index', 'name'=>'index', 'contents'=>'', 'parent'=>'', 'template'=>'page-index.php');
+    setting_pages($pages_array);
+}
+
+function create_init_pokedex_top_pages(){
+    $url="/pokedex";
+    $pokedex_file=file_get_contents(get_template_directory().$url.'/pokedex/pokedex.json');
+    $pokedex_file=mb_convert_encoding($pokedex_file, 'UTF8', 'ASCII,JIS,UTF-8,EUC-JP,SJIS-WIN');
+    $pokedex_json=json_decode($pokedex_file, true);
+    // $description_file=file_get_contents(get_template_directory().$url.'/pokedex/description.json');
+    // $description_file=mb_convert_encoding($description_file, 'UTF8', 'ASCII,JIS,UTF-8,EUC-JP,SJIS-WIN');
+    // $description_json=json_decode($description_file, true);
+
+
+    // $description_version_name=[
+    //     ""
+    // ]
+
+
+    $cnt=4;
+    for($i=0;$i<count($pokedex_json['pokedex']);$i++){
+        $pokedex_id=$pokedex_json['pokedex'][$i]['id'];
+        $pokedex_name=$pokedex_json['pokedex'][$i]['name']['jpn'];
+        $link_uri=home_url( '/' )."pokedex/";
+        // $pokedex_class=$pokedex_json['pokedex'][$i]['classification'];
+        // $pokedex_height=$pokedex_json['pokedex'][$i]['height'];
+        // $pokedex_weight=$pokedex_json['pokedex'][$i]['weight'];
+
+        // if($i==0){
+        //     $pokedex_name_prev=null;
+        // }else{
+        //     $pokedex_name_prev=$pokedex_json['pokedex'][$i-1]['name']['jpn'];
+        // }
+        // if($i>count($pokedex_json['pokedex'])){
+        //     $pokedex_name_next=null;
+        // }else{
+        //     $pokedex_name_next=$pokedex_json['pokedex'][$i+1]['name']['jpn'];
+        // }
+
+if($i==0){
+$contents=$contents.<<<EOF
+<div class="row">
+
+EOF;
+}elseif(($i % $cnt)==0){
+$contents=$contents.<<<EOF
+<div class="row">
+
+EOF;
+}
+
+$contents=$contents.<<<EOF
+<a href="$link_uri$pokedex_name" class="col s6 m3 l3">
+    <div class="card z-depth-0 grey lighten-3">
+        <div class="card-content">
+            <span class="card-title center-align">No$pokedex_id $pokedex_name</span>
+        </div>
+    </div>
+</a>
+EOF;
+        // $pages_array=array('title'=>$pokedex_json['pokedex'][$i]['name']['jpn'], 'name'=>$pokedex_json['pokedex'][$i]['name']['jpn'], 'contents'=>$contents, 'parent'=>'pokedex', 'template'=>'page-pokedex.php');
+        // setting_pages($pages_array);
+if((($i+1) % $cnt)==0){
+$contents=$contents.<<<EOF
+</div>
+
+EOF;
+}            
+    }
+// $contents=$contents.<<<EOF
+// </div>
+// EOF;
+// if($i==3){
+// $contents=$contents.<<<EOF
+// </div>
+// EOF;
+// }else
+    
+    $pages_array=array('title'=>'pokedex', 'name'=>'pokedex', 'contents'=>$contents, 'parent'=>'', 'template'=>'page-pokedex-top.php');
+    setting_pages($pages_array);
+
+}
 
 function create_pokedex_pages(){
     // $pages_array[]=array('title'=>'test', 'name'=>'name_test', 'parent'=>'');
@@ -97,11 +180,11 @@ $contents=$contents.<<<EOF
                     </tr>
                     <tr>
                         <th>高さ</th>
-                        <td>$pokedex_height</td>
+                        <td>$pokedex_height m</td>
                     </tr>
                     <tr>
                         <th>重さ</th>
-                        <td>$pokedex_weight</td>
+                        <td>$pokedex_weight kg</td>
                     </tr>
                 </thead>
             </table>
@@ -148,13 +231,13 @@ $contents=$contents.<<<EOF
 </div>
 
 EOF;
-        $pages_array=array('title'=>$pokedex_json['pokedex'][$i]['name']['jpn'], 'name'=>$pokedex_json['pokedex'][$i]['name']['jpn'], 'contents'=>$contents, 'parent'=>'pokedex');
+        $pages_array=array('title'=>$pokedex_json['pokedex'][$i]['name']['jpn'], 'name'=>$pokedex_json['pokedex'][$i]['name']['jpn'], 'contents'=>$contents, 'parent'=>'pokedex', 'template'=>'page-pokedex.php');
         setting_pages($pages_array);
     }
 }
 
 function setting_pages($val){
-    $template="page-pokedex.php";
+    // $template="page-pokedex.php";
     if(!empty($val['parent'])){
         $parent_id=get_page_by_path($val['parent']);
         $parent_id=$parent_id->ID;
@@ -166,6 +249,8 @@ function setting_pages($val){
 
     if(empty(get_page_by_path($page_slug))){
         $page_name=$val['name'];
+        // remove_filter('content_save_pre', 'wp_filter_post_kses');
+        remove_filter('the_content', 'wpautop');
         $insert_id=wp_insert_post(
             array(
                 'post_title'    =>$val['title'],
@@ -174,7 +259,7 @@ function setting_pages($val){
                 'post_type'     =>'page',
                 'post_parent'   =>$parent_id,
                 'post_content'  =>$val['contents'],
-                'page_template' =>$template,
+                'page_template' =>$val['template'],
             )
         );
     }else{
@@ -186,8 +271,9 @@ function setting_pages($val){
             'post_title'=>$val['title'],
             'post_name' =>$page_name,
             'post_content'  =>$val['contents'],
-            'page_template' =>$template,
+            'page_template' =>$val['template'],
         );
+        remove_filter('the_content', 'wpautop');
         wp_update_post($base_post);
     }
 }
@@ -195,6 +281,16 @@ function setting_pages($val){
 if(isset($_POST['run'])){
     create_pokedex_pages();
 }
+if(isset($_POST['init_run'])){
+    create_init_pages();
+}
+if(isset($_POST['init_pokedex_top_run'])){
+    create_init_pokedex_top_pages();
+}
+
+
+
+
 
 // add_action('admin_menu', 'create_pokedex_pages');
 // https://jajaaan.co.jp/wordpress/wordpress-admin-page/
@@ -271,6 +367,8 @@ function add_custom_menu_page()
         <div class="postbox ">
             <form action="" method="post">
                 <button type="submit" name="run">実行</button>
+                <button type="submit" name="init_run">初期実行</button>
+                <button type="submit" name="init_pokedex_top_run">ポケモン図鑑トップ初期実行</button>
             </form>
         </div>
         <div class="postbox ">
