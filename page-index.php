@@ -30,7 +30,7 @@ Template Post Type: page
     </div>
 </div>
 <div class="row">
-    <a href="#" class="col s12 m12 l6">
+    <a href="<?php echo home_url( '/' )."blog/"; ?>" class="col s12 m12 l6">
         <div class="card">
             <div class="card-content">
                 <div class="card-title">Blog</div>
