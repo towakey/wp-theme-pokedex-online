@@ -18,6 +18,7 @@
 // }
 // add_filter( 'post_rewrite_rules', 'add_article_post_rewrite_rules' );
 
+// https://ateitexe.com/blogtop-page-try-and-error/
 // https://teratail.com/questions/199681
 add_filter( 'pre_get_posts', function( WP_Query $query ) {
 	global $wp;
@@ -77,7 +78,8 @@ function create_init_pokedex_top_pages(){
     for($i=0;$i<count($pokedex_json['pokedex']);$i++){
         $pokedex_id=$pokedex_json['pokedex'][$i]['id'];
         $pokedex_name=$pokedex_json['pokedex'][$i]['name']['jpn'];
-        $link_uri=home_url( '/' )."pokedex/";
+        // $link_uri=home_url( '/' )."pokedex/";
+        $link_uri=site_url( '/' )."pokedex/";
         // $pokedex_class=$pokedex_json['pokedex'][$i]['classification'];
         // $pokedex_height=$pokedex_json['pokedex'][$i]['height'];
         // $pokedex_weight=$pokedex_json['pokedex'][$i]['weight'];
