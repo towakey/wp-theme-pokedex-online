@@ -1,5 +1,58 @@
 <?php
 
+
+// function add_article_post_permalink( $permalink ) {
+//     // $permalink = '/blog' . $permalink;
+//     $permalink = '/' . $permalink;
+//     return $permalink;
+// }
+// add_filter( 'pre_post_link', 'add_article_post_permalink' );
+
+// function add_article_post_rewrite_rules( $post_rewrite ) {
+//     $return_rule = array();
+//     foreach ( $post_rewrite as $regex => $rewrite ) {
+//         // $return_rule['blog/' . $regex] = $rewrite;
+//         $return_rule['/' . $regex] = $rewrite;
+//     }
+//     return $return_rule;
+// }
+// add_filter( 'post_rewrite_rules', 'add_article_post_rewrite_rules' );
+
+// https://teratail.com/questions/199681
+add_filter( 'pre_get_posts', function( WP_Query $query ) {
+	global $wp;
+
+	if ( is_admin() || ! $query->is_main_query() ) {
+		return $query;
+	}
+
+	if ( get_page_by_path( $wp->request ) && 'blog' === $query->get( 'post_type' ) ) {
+		$query->parse_query( "pagename={$wp->request}" );
+	}
+
+	return $query;
+} );
+
+function mytheme_add_permastruct() {
+    global $wp_rewrite;
+    // $wp_rewrite->add_permastruct( 'blog_single', '/%blog%/%post_id%/', false );
+    $wp_rewrite->set_permalink_structure( '/%category%/%postname%/' );
+}
+// add_action( 'init', 'mytheme_add_permastruct', 0 );
+add_action( 'admin_menu', 'mytheme_add_permastruct', 0 );
+
+// 投稿のアーカイブページを作成する
+// function post_has_archive($args, $post_type)
+// {
+//     if ('post' == $post_type) {
+//         $args['rewrite'] = true; // リライトを有効にする
+//         $args['has_archive'] = 'blog'; // 任意のスラッグ名
+//     }
+//     return $args;
+// }
+// add_filter('register_post_type_args', 'post_has_archive', 10, 2);
+
+
 function create_init_pages(){
     $pages_array=array('title'=>'index', 'name'=>'index', 'contents'=>'', 'parent'=>'', 'template'=>'page-index.php');
     setting_pages($pages_array);
@@ -278,7 +331,7 @@ function setting_pages($val){
     }
 }
 
-if(isset($_POST['run'])){
+if(isset($_POST['init_pokedex_run'])){
     create_pokedex_pages();
 }
 if(isset($_POST['init_run'])){
@@ -366,7 +419,7 @@ function add_custom_menu_page()
     <div class="metabox-holder">
         <div class="postbox ">
             <form action="" method="post">
-                <button type="submit" name="run">実行</button>
+                <button type="submit" name="init_pokedex_run">ポケモン図鑑一覧初期実行</button>
                 <button type="submit" name="init_run">初期実行</button>
                 <button type="submit" name="init_pokedex_top_run">ポケモン図鑑トップ初期実行</button>
             </form>
@@ -425,6 +478,18 @@ function add_custom_menu_page()
                     ?>
                     <!-- <h4>テキスト</h4> -->
                     <!-- <p><input type="text" id="text" name="text" value="<?php echo get_option('text'); ?>"></p> -->
+                </div>
+            </div>
+        </div>
+        <div class="postbox ">
+            <h3 class='hndle'><span>パーマリンク</span></h3>
+            <hr>
+            <div class="inside">
+                <div class="main">
+                    <p class="setting_description">タイプ相性データセット</p>
+                    <!-- <h4>テキスト</h4> -->
+                    <!-- <p><input type="text" id="text" name="text" value="<?php echo get_option('text'); ?>"></p> -->
+                    <p><?php var_dump( $wp_rewrite ); ?></p>
                 </div>
             </div>
         </div>
