@@ -54,6 +54,21 @@ add_action( 'admin_menu', 'mytheme_add_permastruct', 0 );
 // add_filter('register_post_type_args', 'post_has_archive', 10, 2);
 
 
+function add_prev_post_link_class($output)
+{
+    // echo $output;
+    return str_replace("<a href=", '<a class="waves-effect waves-light btn left grey lighten-1" href=', $output);
+}
+add_filter('previous_post_link', 'add_prev_post_link_class');
+
+function add_next_post_link_class($output)
+{
+    // echo $output;
+    return str_replace("<a href=", '<a class="waves-effect waves-light btn right grey lighten-1" href=', $output);
+}
+add_filter('next_post_link', 'add_next_post_link_class');
+
+
 function create_init_pages(){
     $pages_array=array('title'=>'index', 'name'=>'index', 'contents'=>'', 'parent'=>'', 'template'=>'page-index.php');
     setting_pages($pages_array);
@@ -484,14 +499,15 @@ function add_custom_menu_page()
             </div>
         </div>
         <div class="postbox ">
-            <h3 class='hndle'><span>パーマリンク</span></h3>
+            <h3 class='hndle'><span>パラメータ</span></h3>
             <hr>
             <div class="inside">
                 <div class="main">
-                    <p class="setting_description">タイプ相性データセット</p>
+                    <!-- <p class="setting_description">タイプ相性データセット</p> -->
                     <!-- <h4>テキスト</h4> -->
                     <!-- <p><input type="text" id="text" name="text" value="<?php echo get_option('text'); ?>"></p> -->
-                    <p><?php var_dump( $wp_rewrite ); ?></p>
+                    <p>home_url:<?php esc_url(home_url('/')); ?></p>
+                    <p>site_url:<?php site_url('/'); ?></p>
                 </div>
             </div>
         </div>
