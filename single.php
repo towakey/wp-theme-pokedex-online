@@ -9,6 +9,15 @@ Template Post Type: post
 <div id="template-single">
     <div class="container">
         <h2 class="pagetitle"><?php the_title();?></h2>
+        <p class="entry-tag">
+            <?php
+                $tags=get_the_tags();
+                foreach($tags as $tag)
+                {
+                    echo '<a href="'.get_tag_link($tag->term_id).'">'.$tag->name.'</a>';
+                }
+            ?>
+        </p>
         <!--投稿日-->
         <p class="entry-date"><?php echo mysql2date('Y年n月j日', $post->post_date); ?></p>
         <div class="divider"></div>
