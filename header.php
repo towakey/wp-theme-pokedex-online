@@ -2,6 +2,34 @@
     <head>
         <title><?php wp_title('｜', true, 'right'); ?></title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="keywords" content="<?php
+            if(is_single()){
+                $tags=get_the_tags();
+                if(!empty($tags))
+                {
+                    echo "pokedex-online,blog,";
+                    foreach($tags as $tag)
+                    {
+                        echo $tag->name;
+                        if(next($tags))
+                        {
+                            echo ",";
+                        }
+                    }
+                }
+            }else{
+                echo "pokedex-online";
+            }
+        ?>">
+        <meta name="description" content="<?php
+            if(is_single()){
+                single_post_title( '', true );
+            }else{
+                bloginfo( 'name' );
+                // echo " - ";
+                // bloginfo( 'description' );
+            }
+        ?>">
         <!-- Google icon font -->
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
         <!-- Materialize CSS -->

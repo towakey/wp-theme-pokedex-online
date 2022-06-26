@@ -12,9 +12,15 @@ Template Post Type: post
         <p class="entry-tag">
             <?php
                 $tags=get_the_tags();
-                foreach($tags as $tag)
-                {
-                    echo '<a href="'.get_tag_link($tag->term_id).'">'.$tag->name.'</a>';
+                if(!empty($tags)){
+                    foreach($tags as $tag)
+                    {
+                        echo '<a href="'.get_tag_link($tag->term_id).'">'.$tag->name.'</a>';
+                        if(next($tags))
+                        {
+                            echo " / ";
+                        }
+                    }
                 }
             ?>
         </p>
